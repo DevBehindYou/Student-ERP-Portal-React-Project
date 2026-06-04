@@ -1,0 +1,19 @@
+{
+  "name": "college-erp-server",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev":   "node --experimental-require-module src/app.js",
+    "start": "node --experimental-require-module src/app.js",
+    "seed":  "node --experimental-require-module src/seed.js"
+  },
+  "dependencies": {
+    "bcryptjs":     "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors":         "^2.8.5",
+    "dotenv":       "^16.4.5",
+    "express":      "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose":     "^9.6.3"
+  }
+}
