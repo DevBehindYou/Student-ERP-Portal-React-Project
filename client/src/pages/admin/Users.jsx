@@ -142,7 +142,11 @@ export default function Users() {
           <tbody>
             {users.map((u) => (
               <tr key={u.id} className="border-t">
-                <td className="px-3 py-2">{u.id}</td>
+                <td className="px-3 py-2">
+                  <div className="font-mono text-xs max-w-[100px] truncate" title={u.id}>
+                    {u.id}
+                  </div>
+                </td>
                 <td className="px-3 py-2">{u.full_name}</td>
                 <td className="px-3 py-2 break-all">{u.email}</td>
                 <td className="px-3 py-2">

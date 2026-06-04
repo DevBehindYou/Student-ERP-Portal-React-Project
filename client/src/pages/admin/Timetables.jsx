@@ -122,7 +122,12 @@ function EnrollPanel({ sectionId }) {
   return (
     <div className="mt-6 rounded border p-3 space-y-3 bg-white dark:bg-white/5">
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <h3 className="font-medium">Enroll students for section #{sectionId}</h3>
+        <h3 className="font-medium flex flex-wrap items-center gap-1">
+          <span>Enroll students for section</span>
+          <span className="font-mono text-sm max-w-[120px] truncate inline-block align-middle" title={sectionId}>
+            #{sectionId}
+          </span>
+        </h3>
         {msg && <div className="text-sm text-neutral-600">{msg}</div>}
       </div>
 
@@ -154,7 +159,12 @@ function EnrollPanel({ sectionId }) {
           <tbody>
             {roster.map((r) => (
               <tr key={r.student_id} className="border-t">
-                <td className="px-3 py-2">#{r.student_id} · {r.full_name}</td>
+                <td className="px-3 py-2 whitespace-nowrap">
+                  <span className="font-mono text-xs max-w-[90px] truncate inline-block align-middle" title={r.student_id}>
+                    #{r.student_id}
+                  </span>
+                  <span className="align-middle"> · {r.full_name}</span>
+                </td>
                 <td className="px-3 py-2 break-all">{r.email}</td>
                 <td className="px-3 py-2 text-right">
                   <button
@@ -320,7 +330,7 @@ export default function Timetables() {
     <div className="space-y-6">
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Create section */}
-        <form onSubmit={create} className="space-y-3 rounded border p-4 bg-white dark:bg-white/5">
+        <form onSubmit={create} className="space-y-3 rounded border p-4 bg-white dark:bg-white/5 min-w-0">
           <h2 className="text-lg font-semibold">Create section</h2>
 
           <SelectBox
@@ -355,7 +365,7 @@ export default function Timetables() {
         </form>
 
         {/* Sections list */}
-        <div className="rounded border p-3 bg-white dark:bg-white/5">
+        <div className="rounded border p-3 bg-white dark:bg-white/5 min-w-0">
           <h2 className="text-lg font-semibold mb-3">Sections</h2>
           <div className="overflow-x-auto rounded border">
             <table className="min-w-full text-sm">
@@ -371,7 +381,11 @@ export default function Timetables() {
               <tbody>
                 {sections.map((s) => (
                   <tr key={s.id} className="border-t">
-                    <td className="px-3 py-2">{s.id}</td>
+                    <td className="px-3 py-2">
+                      <div className="font-mono text-xs max-w-[100px] truncate" title={s.id}>
+                        {s.id}
+                      </div>
+                    </td>
                     <td className="px-3 py-2">{s.course_code} · {s.course_title}</td>
                     <td className="px-3 py-2">{s.teacher_name}</td>
                     <td className="px-3 py-2">{s.term}</td>
