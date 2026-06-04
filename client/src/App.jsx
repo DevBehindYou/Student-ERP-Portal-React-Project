@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./auth/context";
 import Guard from "./auth/Guard";
+import ServerHealthGuard from "./components/ServerHealthGuard";
 
 // auth
 import Login from "./pages/Login";
@@ -30,56 +31,58 @@ export default function App() {
   return (
     <StrictMode>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* entry */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<Login />} />
+        <ServerHealthGuard>
+          <BrowserRouter>
+            <Routes>
+              {/* entry */}
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/login" element={<Login />} />
 
-            {/* admin */}
-            <Route
-              path="/admin"
-              element={
-                <Guard roles={["ADMIN"]}>
-                  <Dashboard />
-                </Guard>
-              }
-            >
-              <Route index element={<Navigate to="users" replace />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="fees" element={<AdminFees />} />
-              <Route path="results" element={<AdminResults />} />
-              <Route path="timetables" element={<AdminTimetables />} />
-              <Route path="notices" element={<AdminNotices />} />
-            </Route>
+              {/* admin */}
+              <Route
+                path="/admin"
+                element={
+                  <Guard roles={["ADMIN"]}>
+                    <Dashboard />
+                  </Guard>
+                }
+              >
+                <Route index element={<Navigate to="users" replace />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="fees" element={<AdminFees />} />
+                <Route path="results" element={<AdminResults />} />
+                <Route path="timetables" element={<AdminTimetables />} />
+                <Route path="notices" element={<AdminNotices />} />
+              </Route>
 
-            {/* teacher */}
-            <Route
-              path="/teacher"
-              element={
-                <Guard roles={["TEACHER"]}>
-                  <Dashboard />
-                </Guard>
-              }
-            >
-              <Route index element={<Navigate to="attendance" replace />} />
-              <Route path="attendance" element={<Attendance />} />
-              <Route path="assignments" element={<Assignments />} />
-              <Route path="notices" element={<TeacherNotices/>}/>
-            </Route>
+              {/* teacher */}
+              <Route
+                path="/teacher"
+                element={
+                  <Guard roles={["TEACHER"]}>
+                    <Dashboard />
+                  </Guard>
+                }
+              >
+                <Route index element={<Navigate to="attendance" replace />} />
+                <Route path="attendance" element={<Attendance />} />
+                <Route path="assignments" element={<Assignments />} />
+                <Route path="notices" element={<TeacherNotices/>}/>
+              </Route>
 
-            {/* student */}
-            <Route path="/student" element={<Guard roles={['STUDENT']}><Dashboard/></Guard>}>
-              <Route index element={<Navigate to="fees" replace/>}/>
-              <Route path="fees" element={<StudentFees/>}/>
-              <Route path="notices" element={<StudentNotices />} />
-              <Route path="assignments" element={<StudentAssignments />} />
-            </Route>
+              {/* student */}
+              <Route path="/student" element={<Guard roles={['STUDENT']}><Dashboard/></Guard>}>
+                <Route index element={<Navigate to="fees" replace/>}/>
+                <Route path="fees" element={<StudentFees/>}/>
+                <Route path="notices" element={<StudentNotices />} />
+                <Route path="assignments" element={<StudentAssignments />} />
+              </Route>
 
-            {/* catch-all */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </BrowserRouter>
+              {/* catch-all */}
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </ServerHealthGuard>
       </AuthProvider>
     </StrictMode>
   );
