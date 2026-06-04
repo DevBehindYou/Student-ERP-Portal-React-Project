@@ -75,35 +75,38 @@ export default function StudentFees() {
           <div className="text-sm text-neutral-500">No records.</div>
         )}
 
-        {rows.map((r) => (
-          <div key={r.id} className="rounded border p-3">
-            <div className="flex items-center justify-between">
-              <div className="font-medium">{r.term}</div>
-              <span className={`text-xs rounded px-2 py-0.5 border ${
-                r.status === "PAID" ? "border-emerald-300 text-emerald-700" : "border-amber-300 text-amber-700"
-              }`}>
-                {r.status}
-              </span>
+        {rows.map((r) => {
+          const fid = r._id || r.id;
+          return (
+            <div key={fid} className="rounded border p-3">
+              <div className="flex items-center justify-between">
+                <div className="font-medium">{r.term}</div>
+                <span className={`text-xs rounded px-2 py-0.5 border ${
+                  r.status === "PAID" ? "border-emerald-300 text-emerald-700" : "border-amber-300 text-amber-700"
+                }`}>
+                  {r.status}
+                </span>
+              </div>
+              <div className="mt-1 text-sm">
+                <div>Amount: <b>{currency.format(Number(r.amount || 0))}</b></div>
+                <div>Due: {fmtDate(r.dueDate || r.due_date)}</div>
+              </div>
+              <div className="mt-3">
+                {r.status === "DUE" ? (
+                  <button
+                    onClick={() => pay(fid, r.amount)}
+                    disabled={payingId === fid}
+                    className="w-full rounded bg-emerald-600 text-white px-3 py-2 disabled:opacity-60"
+                  >
+                    {payingId === fid ? "Processing…" : "Pay"}
+                  </button>
+                ) : (
+                  <div className="text-neutral-400 text-sm">Paid</div>
+                )}
+              </div>
             </div>
-            <div className="mt-1 text-sm">
-              <div>Amount: <b>{currency.format(Number(r.amount || 0))}</b></div>
-              <div>Due: {fmtDate(r.due_date)}</div>
-            </div>
-            <div className="mt-3">
-              {r.status === "DUE" ? (
-                <button
-                  onClick={() => pay(r.id, r.amount)}
-                  disabled={payingId === r.id}
-                  className="w-full rounded bg-emerald-600 text-white px-3 py-2 disabled:opacity-60"
-                >
-                  {payingId === r.id ? "Processing…" : "Pay"}
-                </button>
-              ) : (
-                <div className="text-neutral-400 text-sm">Paid</div>
-              )}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Table for sm+ screens */}
@@ -131,35 +134,38 @@ export default function StudentFees() {
               </tr>
             )}
 
-            {!loading && rows.map((r) => (
-              <tr key={r.id} className="border-t">
-                <td className="px-3 py-2">{r.term}</td>
-                <td className="px-3 py-2 text-right">
-                  {currency.format(Number(r.amount || 0))}
-                </td>
-                <td className="px-3 py-2">
-                  <span className={`text-xs rounded px-2 py-0.5 border ${
-                    r.status === "PAID" ? "border-emerald-300 text-emerald-700" : "border-amber-300 text-amber-700"
-                  }`}>
-                    {r.status}
-                  </span>
-                </td>
-                <td className="px-3 py-2">{fmtDate(r.due_date)}</td>
-                <td className="px-3 py-2 text-right">
-                  {r.status === "DUE" ? (
-                    <button
-                      onClick={() => pay(r.id, r.amount)}
-                      disabled={payingId === r.id}
-                      className="rounded bg-emerald-600 text-white px-3 py-1.5 disabled:opacity-60"
-                    >
-                      {payingId === r.id ? "Processing…" : "Pay"}
-                    </button>
-                  ) : (
-                    <span className="text-neutral-400">—</span>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {!loading && rows.map((r) => {
+              const fid = r._id || r.id;
+              return (
+                <tr key={fid} className="border-t">
+                  <td className="px-3 py-2">{r.term}</td>
+                  <td className="px-3 py-2 text-right">
+                    {currency.format(Number(r.amount || 0))}
+                  </td>
+                  <td className="px-3 py-2">
+                    <span className={`text-xs rounded px-2 py-0.5 border ${
+                      r.status === "PAID" ? "border-emerald-300 text-emerald-700" : "border-amber-300 text-amber-700"
+                    }`}>
+                      {r.status}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2">{fmtDate(r.dueDate || r.due_date)}</td>
+                  <td className="px-3 py-2 text-right">
+                    {r.status === "DUE" ? (
+                      <button
+                        onClick={() => pay(fid, r.amount)}
+                        disabled={payingId === fid}
+                        className="rounded bg-emerald-600 text-white px-3 py-1.5 disabled:opacity-60"
+                      >
+                        {payingId === fid ? "Processing…" : "Pay"}
+                      </button>
+                    ) : (
+                      <span className="text-neutral-400">—</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

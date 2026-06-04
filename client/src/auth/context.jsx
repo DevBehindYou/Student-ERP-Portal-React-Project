@@ -18,9 +18,14 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    await api.post("/auth/logout", {});
-    setUser(null);
-    sessionStorage.removeItem("erp_user");
+    try {
+      await api.post("/auth/logout", {});
+    } catch (e) {
+      console.warn("Server logout request failed:", e);
+    } finally {
+      setUser(null);
+      sessionStorage.removeItem("erp_user");
+    }
   }
 
   return <Ctx.Provider value={{ user, login, logout }}>{children}</Ctx.Provider>;
