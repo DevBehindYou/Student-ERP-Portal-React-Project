@@ -20,7 +20,12 @@ router.get("/ping", (_req, res) => res.json({ ok: true }));
 // ── COURSES ─────────────────────────────────────────────────────────────────
 router.get("/courses", asyncHandler(async (_req, res) => {
   const courses = await Course.find({}).sort({ code: 1 }).lean();
-  res.json(courses);
+  res.json(courses.map(c => ({
+    id:      String(c._id),
+    code:    c.code    || "",
+    title:   c.title   || "",
+    credits: c.credits ?? 4,
+  })));
 }));
 
 router.post("/courses", asyncHandler(async (req, res) => {
@@ -38,10 +43,10 @@ router.put("/courses/:id", asyncHandler(async (req, res) => {
   const updated = await Course.findByIdAndUpdate(
     req.params.id,
     { code, title },
-    { new: true }
+    { new: true, lean: true }
   );
   if (!updated) return res.status(404).json({ error: "Course not found" });
-  res.json(updated);
+  res.json({ id: String(updated._id), code: updated.code || "", title: updated.title || "", credits: updated.credits ?? 4 });
 }));
 
 router.delete("/courses/:id", asyncHandler(async (req, res) => {
