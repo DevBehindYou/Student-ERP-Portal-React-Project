@@ -149,14 +149,14 @@ export default function Fees() {
             <button
               type="button"
               onClick={() => setMode("SECTION")}
-              className={`px-3 py-1.5 ${mode === "SECTION" ? "bg-sky-600 text-white" : "bg-white"}`}
+              className={`px-3 py-1.5 transition ${mode === "SECTION" ? "bg-sky-600 text-white font-medium" : "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300"}`}
             >
               By Section
             </button>
             <button
               type="button"
               onClick={() => setMode("STUDENT")}
-              className={`px-3 py-1.5 ${mode === "STUDENT" ? "bg-sky-600 text-white" : "bg-white"}`}
+              className={`px-3 py-1.5 transition ${mode === "STUDENT" ? "bg-sky-600 text-white font-medium" : "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300"}`}
             >
               Single Student
             </button>
@@ -165,44 +165,58 @@ export default function Fees() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Listbox for SECTION / STUDENT */}
-          {mode === "SECTION" ? (
-            <SelectBox
-              options={sectionOptions}
-              value={form.sectionId}
-              placeholder="Select section…"
-              onChange={(v) => setForm({ ...form, sectionId: v })}
-            />
-          ) : (
-            <SelectBox
-              options={studentOptions}
-              value={form.studentId}
-              placeholder="Select student…"
-              onChange={(v) => setForm({ ...form, studentId: v })}
-            />
-          )}
+          <div className="flex flex-col">
+            <label className="text-xs text-neutral-500 mb-1">{mode === "SECTION" ? "Section" : "Student"}</label>
+            {mode === "SECTION" ? (
+              <SelectBox
+                options={sectionOptions}
+                value={form.sectionId}
+                placeholder="Select section…"
+                onChange={(v) => setForm({ ...form, sectionId: v })}
+              />
+            ) : (
+              <SelectBox
+                options={studentOptions}
+                value={form.studentId}
+                placeholder="Select student…"
+                onChange={(v) => setForm({ ...form, studentId: v })}
+              />
+            )}
+          </div>
 
-          <input
-            className="border rounded px-3 py-2"
-            placeholder="Term (e.g., 2025-Fall)"
-            value={form.term}
-            onChange={(e) => setForm({ ...form, term: e.target.value })}
-            required
-          />
-          <input
-            type="number"
-            className="border rounded px-3 py-2"
-            placeholder="Amount"
-            value={form.amount}
-            onChange={(e) => setForm({ ...form, amount: e.target.value })}
-            min="1"
-            required
-          />
-          <input
-            type="date"
-            className="border rounded px-3 py-2"
-            value={form.due_date}
-            onChange={(e) => setForm({ ...form, due_date: e.target.value })}
-          />
+          <div className="flex flex-col">
+            <label className="text-xs text-neutral-500 mb-1">Term</label>
+            <input
+              className="border rounded px-3 py-2"
+              placeholder="Term (e.g., 2025-Fall)"
+              value={form.term}
+              onChange={(e) => setForm({ ...form, term: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-xs text-neutral-500 mb-1">Amount</label>
+            <input
+              type="number"
+              className="border rounded px-3 py-2"
+              placeholder="Amount"
+              value={form.amount}
+              onChange={(e) => setForm({ ...form, amount: e.target.value })}
+              min="1"
+              required
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-xs text-neutral-500 mb-1">Due Date</label>
+            <input
+              type="date"
+              className="border rounded px-3 py-2"
+              value={form.due_date}
+              onChange={(e) => setForm({ ...form, due_date: e.target.value })}
+            />
+          </div>
         </div>
 
         <div className="mt-2 flex flex-col sm:flex-row gap-2">

@@ -129,7 +129,7 @@ export default function Dashboard() {
               className={({ isActive }) =>
                 `block rounded-xl px-4 py-2.5 text-sm font-medium transition ${
                   isActive
-                    ? "bg-gradient-to-r from-sky-50 to-indigo-500 text-white shadow-md shadow-sky-500/15"
+                    ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-md shadow-sky-500/15"
                     : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-white/5"
                 }`
               }
@@ -197,7 +197,7 @@ export default function Dashboard() {
         )}
 
         {/* Main Content Area */}
-        <main className="rounded-2xl border border-neutral-200 dark:border-white/10 bg-white dark:bg-[#0b1220] p-4 sm:p-6 shadow-sm overflow-hidden min-w-0">
+        <main className="rounded-2xl border border-neutral-200 dark:border-white/10 bg-white dark:bg-[#0b1220] p-4 sm:p-6 shadow-sm min-w-0">
           <Outlet />
         </main>
       </div>

@@ -215,27 +215,36 @@ export default function Results() {
       {sectionId && (
         <form onSubmit={createExam} className="rounded border p-3 space-y-3 bg-white dark:bg-white/5">
           <div className="font-medium">Create exam for section #{sectionId}</div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            <input
-              className="border rounded px-3 py-2"
-              placeholder="Exam name (e.g., Midterm)"
-              value={examForm.name}
-              onChange={(e) => setExamForm({ ...examForm, name: e.target.value })}
-            />
-            <input
-              type="number"
-              min={1}
-              className="border rounded px-3 py-2"
-              placeholder="Max marks"
-              value={examForm.max_marks}
-              onChange={(e) => setExamForm({ ...examForm, max_marks: e.target.value })}
-            />
-            <input
-              type="date"
-              className="border rounded px-3 py-2"
-              value={examForm.exam_date}
-              onChange={(e) => setExamForm({ ...examForm, exam_date: e.target.value })}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="flex flex-col">
+              <label className="text-xs text-neutral-500 mb-1">Exam Name</label>
+              <input
+                className="border rounded px-3 py-2"
+                placeholder="Exam name (e.g., Midterm)"
+                value={examForm.name}
+                onChange={(e) => setExamForm({ ...examForm, name: e.target.value })}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-xs text-neutral-500 mb-1">Max Marks</label>
+              <input
+                type="number"
+                min={1}
+                className="border rounded px-3 py-2"
+                placeholder="Max marks"
+                value={examForm.max_marks}
+                onChange={(e) => setExamForm({ ...examForm, max_marks: e.target.value })}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-xs text-neutral-500 mb-1">Exam Date</label>
+              <input
+                type="date"
+                className="border rounded px-3 py-2"
+                value={examForm.exam_date}
+                onChange={(e) => setExamForm({ ...examForm, exam_date: e.target.value })}
+              />
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button className="rounded bg-emerald-600 text-white px-4 py-2">
