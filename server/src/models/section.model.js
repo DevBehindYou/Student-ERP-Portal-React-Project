@@ -9,4 +9,7 @@ const SectionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+SectionSchema.index({ teacherId: 1 });
+SectionSchema.index({ courseId: 1 });
+
 export const Section = mongoose.models.Section || mongoose.model("Section", SectionSchema);

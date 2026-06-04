@@ -1,31 +1,37 @@
-import { StrictMode } from "react";
+import { StrictMode, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./auth/context";
 import Guard from "./auth/Guard";
 import ServerHealthGuard from "./components/ServerHealthGuard";
 
-// auth
-import Login from "./pages/Login";
+// Lazy-loaded components for optimal bundle splitting
+const Login = lazy(() => import("./pages/Login"));
+const Dashboard = lazy(() => import("./layouts/Dashboard"));
 
-// shared layout
-import Dashboard from "./layouts/Dashboard";
+// Admin pages
+const AdminUsers = lazy(() => import("./pages/admin/Users"));
+const AdminFees = lazy(() => import("./pages/admin/Fees"));
+const AdminNotices = lazy(() => import("./pages/admin/Notices"));
+const AdminResults = lazy(() => import("./pages/admin/Results"));
+const AdminTimetables = lazy(() => import("./pages/admin/Timetables"));
 
-// admin
-import AdminUsers from "./pages/admin/Users";
-import AdminFees from "./pages/admin/Fees";
-import AdminNotices from "./pages/admin/Notices";
-import AdminResults from "./pages/admin/Results";
-import AdminTimetables from "./pages/admin/Timetables";
+// Teacher pages
+const Attendance = lazy(() => import("./pages/teacher/Attendance"));
+const Assignments = lazy(() => import("./pages/teacher/Assignments"));
+const TeacherNotices = lazy(() => import("./pages/teacher/Notices"));
 
-// teacher
-import Attendance from "./pages/teacher/Attendance";
-import Assignments from "./pages/teacher/Assignments";
-import TeacherNotices from "./pages/teacher/Notices";
+// Student pages
+const StudentFees = lazy(() => import("./pages/student/Fees"));
+const StudentNotices = lazy(() => import("./pages/student/Notices"));
+const StudentAssignments = lazy(() => import("./pages/student/Assignments"));
 
-// student
-import StudentFees from "./pages/student/Fees";
-import StudentNotices from "./pages/student/Notices";
-import StudentAssignments from "./pages/student/Assignments";
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-[#080d16] transition-colors duration-300">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-sky-500/20 border-t-sky-500" />
+    </div>
+  );
+}
 
 export default function App() {
   return (
@@ -33,54 +39,56 @@ export default function App() {
       <AuthProvider>
         <ServerHealthGuard>
           <BrowserRouter>
-            <Routes>
-              {/* entry */}
-              <Route path="/" element={<Navigate to="/login" replace />} />
-              <Route path="/login" element={<Login />} />
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                {/* entry */}
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/login" element={<Login />} />
 
-              {/* admin */}
-              <Route
-                path="/admin"
-                element={
-                  <Guard roles={["ADMIN"]}>
-                    <Dashboard />
-                  </Guard>
-                }
-              >
-                <Route index element={<Navigate to="users" replace />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="fees" element={<AdminFees />} />
-                <Route path="results" element={<AdminResults />} />
-                <Route path="timetables" element={<AdminTimetables />} />
-                <Route path="notices" element={<AdminNotices />} />
-              </Route>
+                {/* admin */}
+                <Route
+                  path="/admin"
+                  element={
+                    <Guard roles={["ADMIN"]}>
+                      <Dashboard />
+                    </Guard>
+                  }
+                >
+                  <Route index element={<Navigate to="users" replace />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="fees" element={<AdminFees />} />
+                  <Route path="results" element={<AdminResults />} />
+                  <Route path="timetables" element={<AdminTimetables />} />
+                  <Route path="notices" element={<AdminNotices />} />
+                </Route>
 
-              {/* teacher */}
-              <Route
-                path="/teacher"
-                element={
-                  <Guard roles={["TEACHER"]}>
-                    <Dashboard />
-                  </Guard>
-                }
-              >
-                <Route index element={<Navigate to="attendance" replace />} />
-                <Route path="attendance" element={<Attendance />} />
-                <Route path="assignments" element={<Assignments />} />
-                <Route path="notices" element={<TeacherNotices/>}/>
-              </Route>
+                {/* teacher */}
+                <Route
+                  path="/teacher"
+                  element={
+                    <Guard roles={["TEACHER"]}>
+                      <Dashboard />
+                    </Guard>
+                  }
+                >
+                  <Route index element={<Navigate to="attendance" replace />} />
+                  <Route path="attendance" element={<Attendance />} />
+                  <Route path="assignments" element={<Assignments />} />
+                  <Route path="notices" element={<TeacherNotices/>}/>
+                </Route>
 
-              {/* student */}
-              <Route path="/student" element={<Guard roles={['STUDENT']}><Dashboard/></Guard>}>
-                <Route index element={<Navigate to="fees" replace/>}/>
-                <Route path="fees" element={<StudentFees/>}/>
-                <Route path="notices" element={<StudentNotices />} />
-                <Route path="assignments" element={<StudentAssignments />} />
-              </Route>
+                {/* student */}
+                <Route path="/student" element={<Guard roles={['STUDENT']}><Dashboard/></Guard>}>
+                  <Route index element={<Navigate to="fees" replace/>}/>
+                  <Route path="fees" element={<StudentFees/>}/>
+                  <Route path="notices" element={<StudentNotices />} />
+                  <Route path="assignments" element={<StudentAssignments />} />
+                </Route>
 
-              {/* catch-all */}
-              <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes>
+                {/* catch-all */}
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </ServerHealthGuard>
       </AuthProvider>

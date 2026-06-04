@@ -11,4 +11,8 @@ const FeeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+FeeSchema.index({ studentId: 1 });
+FeeSchema.index({ status: 1 });
+FeeSchema.index({ dueDate: -1 });
+
 export const Fee = mongoose.models.Fee || mongoose.model("Fee", FeeSchema);

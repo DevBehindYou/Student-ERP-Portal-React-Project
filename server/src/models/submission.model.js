@@ -7,7 +7,11 @@ const SubmissionSchema = new mongoose.Schema(
       ref: "Assignment",
       required: true,
     },
-    studentId: { type: Number, required: true },  // users.id (STUDENT)
+    studentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     url: { type: String, default: "" },
     status: { type: String, enum: ["SUBMITTED", "MISSING"], default: "SUBMITTED" },
     submittedAt: { type: Date, default: Date.now },

@@ -35,13 +35,12 @@ export default function Fees() {
   // load dropdowns once
   useEffect(() => {
     (async () => {
-      const [secs, users] = await Promise.all([
+      const [secs, studs] = await Promise.all([
         api.get("/admin/sections"),
-        api.get("/admin/users"),
+        api.get("/admin/students"),
       ]);
       setSections(secs);
-      // crude student filter; swap for /admin/students if you have it
-      setStudents(users.filter(u => !/admin/i.test(u.email) && !/teacher/i.test(u.email)));
+      setStudents(studs);
     })();
   }, []);
 
