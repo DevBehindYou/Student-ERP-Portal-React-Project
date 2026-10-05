@@ -35,15 +35,32 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-// ---- routes (mount ONCE) ----
-app.use("/api/auth",      authRoutes);
-app.use("/api/admin",     adminRoutes);
-app.use("/api/teacher",   teacherRoutes);
-app.use("/api/student",   studentRoutes);
-app.use("/api/analytics", analyticsRoutes);
+// ---- DB connection (cached, so serverless invocations reuse it) ----
+let mongoReady;
+function ensureMongo() {
+  mongoReady ??= connectMongo(process.env.MONGO_URL).catch((err) => {
+    mongoReady = undefined; // allow a retry on the next request
+    throw err;
+  });
+  return mongoReady;
+}
 
-// health check
-app.get("/api/health", (_req, res) => res.json({ ok: true }));
+// ---- routes (mount ONCE) ----
+const api = express.Router();
+api.get("/health", (_req, res) => res.json({ ok: true }));
+
+// everything below needs the database
+api.use((_req, _res, next) => ensureMongo().then(() => next(), next));
+api.use("/auth",      authRoutes);
+api.use("/admin",     adminRoutes);
+api.use("/teacher",   teacherRoutes);
+api.use("/student",   studentRoutes);
+api.use("/analytics", analyticsRoutes);
+
+// Mounted at /api (local dev, Render, or Vercel passing the full path) and
+// at / (in case Vercel strips the matched /api prefix before the service).
+app.use("/api", api);
+app.use("/", api);
 
 // ---- global error handler (ONE instance, last) ----
 app.use((err, _req, res, _next) => {
@@ -51,11 +68,11 @@ app.use((err, _req, res, _next) => {
   res.status(err.status || 500).json({ error: err.message || "Internal Server Error" });
 });
 
-const port = process.env.PORT || 4000;
-
+// ---- local / long-running server (not used on Vercel, which imports `app`) ----
 async function start() {
+  const port = process.env.PORT || 4000;
   try {
-    await connectMongo(process.env.MONGO_URL);
+    await ensureMongo();
   } catch (err) {
     console.error("❌ Failed to connect to MongoDB Atlas:", err.message);
     process.exit(1);
@@ -75,4 +92,6 @@ async function start() {
   });
 }
 
-start();
+if (!process.env.VERCEL) start();
+
+export default app;
