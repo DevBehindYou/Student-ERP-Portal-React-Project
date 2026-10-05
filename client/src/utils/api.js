@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL;
+// Defaults to the same-origin /api (Vercel services setup); set VITE_API_URL to point at an external backend.
+const API_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_URL}${path}`, {
